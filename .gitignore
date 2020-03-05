@@ -1,0 +1,6 @@
+*/main
+*/target/
+
+Cargo.Lock
+
+**/*.rs.bk

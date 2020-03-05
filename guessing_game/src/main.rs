@@ -5,6 +5,7 @@ extern crate rand;
 // Rngトレイトが乱数生成器が実装するメソッドを定義しているためスコープする
 // トレイトについてはまた...
 use rand::Rng;
+use std::cmp::Ordering;
 use std::io;
 
 fn main() {
@@ -26,6 +27,18 @@ fn main() {
         .read_line(&mut guess)
         .expect("Failed to read line");
 
+    // shadowingしてもとの値を覆い隠す
+    // guess_strみたいなカッコ悪いことはしなくてもよい！
+    // trim()は\nを削除してくれる
+    // parse()はなんらかの数値にしてくれる
+    let guess: u32 = guess.trim().parse().expect("Please type a number");
+
     // {}はpythonでもおなじみなプレースホルダー
     println!("You guessed: {}", guess);
+
+    match guess.cmp(&secret_number) {
+        Ordering::Less => println!("Too small!"),
+        Ordering::Greater => println!("Too big!"),
+        Ordering::Equal => println!("You win!"),
+    }
 }

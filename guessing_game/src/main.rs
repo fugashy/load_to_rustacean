@@ -1,8 +1,17 @@
+// randクレートを外部依存として使用することをコンパイラに伝える
+extern crate rand;
+
 // ライブラリをスコープする
+// Rngトレイトが乱数生成器が実装するメソッドを定義しているためスコープする
+// トレイトについてはまた...
+use rand::Rng;
 use std::io;
 
 fn main() {
     println!("Guess the number!");
+
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+    println!("The secret number is: {}", secret_number);
 
     println!("Please input your guess.");
 
@@ -18,5 +27,5 @@ fn main() {
         .expect("Failed to read line");
 
     // {}はpythonでもおなじみなプレースホルダー
-    println!("You guessed: {}", guess)
+    println!("You guessed: {}", guess);
 }

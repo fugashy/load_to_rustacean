@@ -59,9 +59,51 @@ fn interactions_of_variables_and_data_in_heap() {
     println!("I want to show value of s3: {}", s3);
 }
 
+fn takes_onwership(some_string: String) {
+    // some_stringがスコープに入る
+    println!("some string is: {}", some_string);
+    // dropが呼ばれ，メモリが開放される
+}
+
+fn gives_ownership() -> String {
+    let some_string = String::from("hello");
+    // some_stringを返す(move)
+    some_string
+}
+
+fn takes_and_gives_back(a_string: String) -> String {
+    // スコープにはいるが，そのまま返す(move)
+    a_string
+}
+
+fn makes_copy(some_integer: i32) {
+    // some_integerのスコープ
+    println!("some integer is: {}", some_integer);
+    // 特に何もなし
+}
+
+fn test_ownership() {
+    let s = String::from("hello");
+    // この関数で所有権が譲渡される
+    takes_onwership(s);
+    // error !
+    // println!("{}", s);
+    let x = 5;
+    makes_copy(x);
+    println!("x is: {}", x);
+
+    // 返り値の所有権を得た
+    let s = gives_ownership();
+    println!("gave {}", s);
+    // 渡して，すぐ帰ってきた
+    let s = takes_and_gives_back(s);
+    println!("take and give {}", s);
+}
+
 fn main() {
     scope_lieral();
     sample_of_string_type();
     interactions_of_variables_and_data_in_stack();
     interactions_of_variables_and_data_in_heap();
+    test_ownership();
 }

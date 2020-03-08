@@ -58,10 +58,35 @@ fn char_type() {
 
 fn tuple_type() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
+    // 個々の値を取り出す
     let (x, y, z) = tup;
     help_printing("x", x);
     help_printing("y", y);
     help_printing("z", z);
+    let x = tup.0;
+    help_printing("x", x);
+    let y = tup.1;
+    help_printing("y", y);
+    let z = tup.2;
+    help_printing("z", z);
+}
+
+// 固定長の配列はスタックに領域が確保される
+fn list_type() {
+    let a = [1, 2, 3, 4, 5];
+    // プリントするにはstd::fmt::Displayトレイトが必要
+    //  help_printing("a", a);
+    let first = a[0];
+    help_printing("first", first);
+    let second = a[1];
+    help_printing("second", second);
+    // 無効なインデックスを使うとエラーで終了する
+    //  let index = 5;
+    //  let invalid_one = a[index];
+    //  help_printing("invalid_one", invalid_one);
+    // このときはコンパイル時点で教えてくれる
+    //  let invalid_one = a[5];
+    //  help_printing("invalid_one", invalid_one);
 }
 
 struct MyTuple(i32, f64, u8);
@@ -92,5 +117,6 @@ fn main() {
     logistic_operations();
     char_type();
     tuple_type();
+    list_type();
     mytype();
 }

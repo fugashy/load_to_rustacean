@@ -1,3 +1,5 @@
+use std::fmt;
+
 // Tに対しては，Displayトレイトが実装されているものに限る（トレイト境界）
 fn help_printing<T: std::fmt::Display>(name: &str, value: T) {
     println!("The value of {0} is: {1}", name, value);
@@ -56,12 +58,24 @@ fn char_type() {
 
 fn tuple_type() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
-    //  help_printing("tup", tup);
-    // ここの値を取り出す
     let (x, y, z) = tup;
     help_printing("x", x);
     help_printing("y", y);
     help_printing("z", z);
+}
+
+struct MyTuple(i32, f64, u8);
+
+// 独自の構造体のためのDisplayトレイトを実装する
+impl std::fmt::Display for MyTuple {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({}, {}, {})", self.0, self.1, self.2)
+    }
+}
+
+fn mytype() {
+    let tup = MyTuple(500, 6.4, 1);
+    help_printing("tup", tup);
 }
 
 // 型を変化させるような更新は許されない
@@ -78,4 +92,5 @@ fn main() {
     logistic_operations();
     char_type();
     tuple_type();
+    mytype();
 }

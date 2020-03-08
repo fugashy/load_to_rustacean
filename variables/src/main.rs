@@ -20,6 +20,13 @@ fn shodowing() {
     println!("length of spaces is :{}", spaces);
 }
 
+// 型を変化させるような更新は許されない
+//  fn not_allowed_shudowing() {
+//      let mut spaces = "    ";
+//      spaces = spaces.len();
+//      println!("length of spaces is :{}", spaces);
+//  }
+
 fn main() {
     update();
     shodowing();

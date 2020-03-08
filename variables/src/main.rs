@@ -89,6 +89,24 @@ fn list_type() {
     //  help_printing("invalid_one", invalid_one);
 }
 
+fn function_indcludes_statement_and_expression() {
+    // yの中のxが評価されるので，このxは使われない
+    // let x = 5;
+    let y = {
+        let x = 3;
+        x + 1
+    };
+    help_printing("y", y);
+}
+
+fn function_returns_value() -> u32 {
+    // 返したい値になる式である
+    // セミコロンは不要
+    // 経験的に，セミコロンが関数の最後についてなくても問題なかったりするので，
+    // この辺の扱いがc/c++とは違うと思われる
+    5 + 4
+}
+
 struct MyTuple(i32, f64, u8);
 
 // 独自の構造体のためのDisplayトレイトを実装する
@@ -118,5 +136,7 @@ fn main() {
     char_type();
     tuple_type();
     list_type();
+    function_indcludes_statement_and_expression();
+    help_printing("function_returns_value", function_returns_value());
     mytype();
 }

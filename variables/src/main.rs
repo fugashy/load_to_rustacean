@@ -100,11 +100,16 @@ fn function_indcludes_statement_and_expression() {
 }
 
 fn function_returns_value() -> u32 {
-    // 返したい値になる式である
+    // 値として評価される例
     // セミコロンは不要
     // 経験的に，セミコロンが関数の最後についてなくても問題なかったりするので，
     // この辺の扱いがc/c++とは違うと思われる
     5 + 4
+}
+
+fn function_returns_value_as_return_word() -> u32 {
+    // こちらは文として評価される例
+    return 5 + 4;
 }
 
 struct MyTuple(i32, f64, u8);
@@ -138,5 +143,9 @@ fn main() {
     list_type();
     function_indcludes_statement_and_expression();
     help_printing("function_returns_value", function_returns_value());
+    help_printing(
+        "function_returns_value_as_return_word",
+        function_returns_value_as_return_word(),
+    );
     mytype();
 }

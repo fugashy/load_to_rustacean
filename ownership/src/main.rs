@@ -100,10 +100,58 @@ fn test_ownership() {
     println!("take and give {}", s);
 }
 
+// 参照型のStringが引数
+fn calculate_length(s: &String) -> usize {
+    s.len()
+    // sは参照型なので，スコープを抜けてもdropされるわけではない
+}
+
+// 所有権を得てはすぐ返すのをやたらと実装するのはめんどくさい
+// 参照という仕組みも用意されている
+fn reference_sample() {
+    let s1 = String::from("hello");
+    // 参照型の関数には参照を渡すことを明示する
+    let len = calculate_length(&s1);
+    println!("The length of {} is {}", s1, len);
+}
+
+// 可変参照をシグネチャにする
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+    // some_stringは参照型なので，スコープを抜けてもdropされるわけではない
+}
+
+fn modify_referenced_variable() {
+    // 可変の変数を
+    let mut s = String::from("hello");
+
+    // 可変参照する
+    change(&mut s);
+    // dropされないので使える
+    println!("{}", s);
+}
+
+fn double_reference() {
+    let mut s = String::from("hello");
+
+    let r1 = &mut s;
+    // cannot borrow `s` as mutable more than once at a time
+    // let r2 = &mut s;
+    // cannot borrow `s` as immutable because it is also borrowed as mutable
+    // let r3 = &s;
+
+    println!("{}", r1);
+    // println!("{}", r2);
+    // println!("{}", r3);
+}
+
 fn main() {
     scope_lieral();
     sample_of_string_type();
     interactions_of_variables_and_data_in_stack();
     interactions_of_variables_and_data_in_heap();
     test_ownership();
+    reference_sample();
+    modify_referenced_variable();
+    double_reference();
 }

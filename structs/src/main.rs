@@ -83,8 +83,31 @@ fn instanciate_rectangle() {
     println!("area of rect1 is {}", rect1.area());
 }
 
+struct Point2D {
+    x: f64,
+    y: f64,
+}
+
+impl Point2D {
+    fn distance(&self, other: &Point2D) -> f64 {
+        let x_squared = f64::powi(other.x - self.x, 2);
+        let y_squared = f64::powi(other.y - self.y, 2);
+        f64::sqrt(x_squared + y_squared)
+    }
+}
+
+fn calcurate_distance_between_points() {
+    let p1 = Point2D { x: 0.0, y: 0.0 };
+    let p2 = Point2D { x: 5.0, y: 6.5 };
+
+    println!("distance between p1 and p2 is :{}", p1.distance(&p2));
+    // 等価
+    println!("distance between p1 and p2 is :{}", (&p1).distance(&p2));
+}
+
 fn main() {
     instanciate();
     instanciate_tuple_structs();
     instanciate_rectangle();
+    calcurate_distance_between_points();
 }

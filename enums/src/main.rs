@@ -112,9 +112,26 @@ fn inspect_coin() {
     println!("value of coin is: {}", value_in_cents(coin));
 }
 
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+fn operation_of_option() {
+    let five = Some(5);
+    println!("five is {:?}", five);
+    let six = plus_one(five);
+    println!("six is {:?}", six);
+    let none = plus_one(None);
+    println!("none is {:?}", none);
+}
+
 fn main() {
     simple_usage();
     use_message();
     option();
     inspect_coin();
+    operation_of_option();
 }

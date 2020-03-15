@@ -61,6 +61,15 @@ fn option() {
     println!("absent_number is: {:?}", absent_number);
 }
 
+//  fn invalid_operation_by_using_option() {
+//      let x: i8 = 5;
+//      let y: Option<i8> = Some(5);
+//
+//      // cannot add `std::option::Option<i8>` to `i8`
+//      let sum = x + y;
+//      println!("sum is: {}", sum);
+//  }
+
 fn main() {
     simple_usage();
     use_message();

@@ -128,10 +128,23 @@ fn operation_of_option() {
     println!("none is {:?}", none);
 }
 
+fn cover_other_pattern() {
+    let some_u8_value = 1;
+    match some_u8_value {
+        1 => println!("one"),
+        3 => println!("three"),
+        5 => println!("five"),
+        7 => println!("seven"),
+        // どんなパターンにもマッチするので，最後に書いておく
+        _ => (),
+    }
+}
+
 fn main() {
     simple_usage();
     use_message();
     option();
     inspect_coin();
     operation_of_option();
+    cover_other_pattern();
 }

@@ -70,6 +70,10 @@ impl Rectangle {
     fn area(&self) -> u32 {
         self.width * self.height
     }
+
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
 }
 
 fn instanciate_rectangle() {
@@ -81,6 +85,12 @@ fn instanciate_rectangle() {
     // Rustは複数のフィールドを持つユーザー定義型について推測しない
     println!("rect1 is {:#?}", rect1);
     println!("area of rect1 is {}", rect1.area());
+
+    let rect2 = Rectangle {
+        width: 20,
+        height: 40,
+    };
+    println!("Can rect1 hold rect2? :{}", rect1.can_hold(&rect2));
 }
 
 struct Point2D {

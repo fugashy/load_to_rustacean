@@ -145,6 +145,22 @@ fn double_reference() {
     // println!("{}", r3);
 }
 
+// ダングリングポインタを作る関す
+// 他人に渡されてしまった可能性のあるメモリ
+//  fn dangle() -> &String {
+//      let s = String::from("hello");
+//      &s
+//      // 関数を抜けるとsはdropされるため，返される参照先が存在しなくなる
+//      // rustではそれをチェックしてくれる
+//      // &StringではなくStringを関数にすれば，所有権が移るので大丈夫
+//  }
+
+//  fn try_to_fetch_dangle_reference() {
+//      // missing lifetime specifier
+//      let reference_to_nothing = dangle();
+//      println!("{}", reference_to_nothing);
+//  }
+
 fn main() {
     scope_lieral();
     sample_of_string_type();

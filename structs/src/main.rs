@@ -58,7 +58,33 @@ fn instanciate_tuple_structs() {
     let _origin = Point(0, 0, 0);
 }
 
+// Debugを継承することでstd::fmt::Debugが提供される
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+impl Rectangle {
+    // Rectangleの文脈中にあることがコンパイラが理解できるので，selfでよい
+    // 自分自身を不変参照で借用している
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+fn instanciate_rectangle() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    // Rustは複数のフィールドを持つユーザー定義型について推測しない
+    println!("rect1 is {:#?}", rect1);
+    println!("area of rect1 is {}", rect1.area());
+}
+
 fn main() {
     instanciate();
     instanciate_tuple_structs();
+    instanciate_rectangle();
 }

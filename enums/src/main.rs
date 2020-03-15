@@ -70,8 +70,51 @@ fn option() {
 //      println!("sum is: {}", sum);
 //  }
 
+#[derive(Debug)]
+#[allow(dead_code)]
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quater(UsState),
+}
+
+#[derive(Debug)]
+#[allow(dead_code)]
+enum UsState {
+    Alabama,
+    Alaska,
+    Calfornia,
+}
+
+fn value_in_cents(coin: Coin) -> u32 {
+    match coin {
+        Coin::Penny => 1,
+        // 処理もかける
+        Coin::Nickel => {
+            println!("Nickel");
+            5
+        }
+        Coin::Dime => 10,
+        // 何か持っている場合は引数名を設定した上で使用可能!
+        Coin::Quater(state) => {
+            println!("State quater from: {:?}", state);
+            25
+        }
+    }
+}
+
+fn inspect_coin() {
+    let coin = Coin::Nickel;
+    println!("value of coin is: {}", value_in_cents(coin));
+
+    let coin = Coin::Quater(UsState::Alaska);
+    println!("value of coin is: {}", value_in_cents(coin));
+}
+
 fn main() {
     simple_usage();
     use_message();
     option();
+    inspect_coin();
 }

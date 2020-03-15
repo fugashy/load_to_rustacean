@@ -182,6 +182,21 @@ fn try_to_extract_first_word() {
     s.clear();
 }
 
+fn slicing_sample() {
+    let s = String::from("hello world");
+
+    // Stringの一部への参照
+    let hello = &s[0..5];
+    let world = &s[6..11];
+
+    println!("sliced :{}", hello);
+    println!("sliced :{}", world);
+
+    // sと等価
+    let sliced = &s[..];
+    println!("sliced is equal to s :{}", sliced);
+}
+
 fn main() {
     scope_lieral();
     sample_of_string_type();
@@ -192,4 +207,5 @@ fn main() {
     modify_referenced_variable();
     double_reference();
     try_to_extract_first_word();
+    slicing_sample();
 }

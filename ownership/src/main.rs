@@ -161,26 +161,26 @@ fn double_reference() {
 //      println!("{}", reference_to_nothing);
 //  }
 
-fn first_word(s: &String) -> usize {
-    let bytes = s.as_bytes();
-    // enumerateから帰るのは，indexの値と，itemへの参照
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return i;
-        }
-    }
-    s.len()
-}
-
-fn try_to_extract_first_word() {
-    let mut s = String::from("hello world");
-    let word = first_word(&s);
-    println!("{}", word);
-    // sを開放しても，wordにはsの情報をもとに計算した結果が残っている
-    // これを頼りに他の処理をするとまずい
-    // sの開放と同時にwordも意味消失することがプログラマに伝わる仕組みがほしい
-    s.clear();
-}
+//  fn first_word(s: &String) -> usize {
+//      let bytes = s.as_bytes();
+//      // enumerateから帰るのは，indexの値と，itemへの参照
+//      for (i, &item) in bytes.iter().enumerate() {
+//          if item == b' ' {
+//              return i;
+//          }
+//      }
+//      s.len()
+//  }
+//
+//  fn try_to_extract_first_word() {
+//      let mut s = String::from("hello world");
+//      let word = first_word(&s);
+//      println!("{}", word);
+//      // sを開放しても，wordにはsの情報をもとに計算した結果が残っている
+//      // これを頼りに他の処理をするとまずい
+//      // sの開放と同時にwordも意味消失することがプログラマに伝わる仕組みがほしい
+//      s.clear();
+//  }
 
 fn slicing_sample() {
     let s = String::from("hello world");
@@ -197,6 +197,29 @@ fn slicing_sample() {
     println!("sliced is equal to s :{}", sliced);
 }
 
+// slicingを使ってfirst_wordを作り直す
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
+fn try_to_extract_first_word() {
+    let s = String::from("hello world");
+    let word = first_word(&s[..]);
+    println!("first word of string is: {}", word);
+
+    // 文字リテラルはstr型 not String
+    let sl = "mac world";
+    let word = first_word(sl);
+    println!("first word of literal is: {}", word);
+}
+
 fn main() {
     scope_lieral();
     sample_of_string_type();
@@ -208,4 +231,5 @@ fn main() {
     double_reference();
     try_to_extract_first_word();
     slicing_sample();
+    try_to_extract_first_word();
 }

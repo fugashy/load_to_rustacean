@@ -48,6 +48,17 @@ fn instanciate() {
     };
 }
 
+// タプル構造体
+// 名前のないフィールドを持つ
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+fn instanciate_tuple_structs() {
+    let _black = Color(0, 0, 0);
+    let _origin = Point(0, 0, 0);
+}
+
 fn main() {
     instanciate();
+    instanciate_tuple_structs();
 }

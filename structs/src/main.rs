@@ -75,6 +75,17 @@ impl Rectangle {
         self.width > other.width && self.height > other.height
     }
 }
+// implブロックでは内部関数だけでなく，関連する関数も定義できる
+// 複数のimplブロックを作ることもできる
+// いつか役に立つ
+impl Rectangle {
+    fn square(size: u32) -> Rectangle {
+        Rectangle {
+            width: size,
+            height: size,
+        }
+    }
+}
 
 fn instanciate_rectangle() {
     let rect1 = Rectangle {
@@ -91,6 +102,9 @@ fn instanciate_rectangle() {
         height: 40,
     };
     println!("Can rect1 hold rect2? :{}", rect1.can_hold(&rect2));
+
+    let rect3 = Rectangle::square(30);
+    println!("rect3 is {:#?}", rect3);
 }
 
 struct Point2D {

@@ -76,7 +76,7 @@ enum Coin {
     Penny,
     Nickel,
     Dime,
-    Quater(UsState),
+    Quarter(UsState),
 }
 
 #[derive(Debug)]
@@ -97,7 +97,7 @@ fn value_in_cents(coin: Coin) -> u32 {
         }
         Coin::Dime => 10,
         // 何か持っている場合は引数名を設定した上で使用可能!
-        Coin::Quater(state) => {
+        Coin::Quarter(state) => {
             println!("State quater from: {:?}", state);
             25
         }
@@ -108,7 +108,7 @@ fn inspect_coin() {
     let coin = Coin::Nickel;
     println!("value of coin is: {}", value_in_cents(coin));
 
-    let coin = Coin::Quater(UsState::Alaska);
+    let coin = Coin::Quarter(UsState::Alaska);
     println!("value of coin is: {}", value_in_cents(coin));
 }
 
@@ -140,6 +140,33 @@ fn cover_other_pattern() {
     }
 }
 
+// 1つのケースにしか興味がない場合はif letパターンがおすすめ
+fn if_let_pattern() {
+    let some_u8_value = Some(8);
+    if let Some(3) = some_u8_value {
+        println!("three");
+    } else {
+        println!("other");
+    }
+
+    let coin = Coin::Nickel;
+    let mut count = 0;
+    // これと
+    // coinは借用して使用する
+    // coinがmoveされるため，後で使用できない
+    match &coin {
+        Coin::Quarter(state) => println!("State quater from {:?}", state),
+        _ => count += 1,
+    }
+    // これは等価
+    if let Coin::Quarter(state) = &coin {
+        println!("State quater from {:?}", state);
+    } else {
+        count += 1;
+    }
+    println!("count is: {}", count);
+}
+
 fn main() {
     simple_usage();
     use_message();
@@ -147,4 +174,5 @@ fn main() {
     inspect_coin();
     operation_of_option();
     cover_other_pattern();
+    if_let_pattern();
 }

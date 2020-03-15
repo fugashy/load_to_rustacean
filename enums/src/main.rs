@@ -44,7 +44,25 @@ fn use_message() {
     m.call();
 }
 
+// Option<T>は標準ライブラリに含まれるenum
+// 値が存在するかどうかをコード化し，null参照を未然に防ぐ狙いがある
+// enum Option<T> {
+//     Some(T),
+//     None,
+// }
+// Some値があれば，値が存在することがわかり，その値はSomeに保持されている
+fn option() {
+    let some_number = Some(5);
+    let some_string = Some("a string");
+    let absent_number: Option<i32> = None;
+
+    println!("some_number is: {:?}", some_number);
+    println!("some_string is: {:?}", some_string);
+    println!("absent_number is: {:?}", absent_number);
+}
+
 fn main() {
     simple_usage();
     use_message();
+    option();
 }

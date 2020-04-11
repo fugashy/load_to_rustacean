@@ -1,4 +1,5 @@
-// vector, string, hashmap
+// vector, string, hashmapの使い方・注意点など
+
 fn instantiate_vector() {
     // 素直?な宣言
     let _v: Vec<i32> = Vec::new();
@@ -48,7 +49,7 @@ fn try_to_push_to_ownershiped_vector() {
     // 不変
     let first = &v[0];
 
-    // 可変借用になる！！！
+    // 不変借用されているオブジェクトに対して可変な処理ができない
     // 不変で借用されている状態だと，ヒープに変化があるかもしれないため許可されない
     // v.push(6);
 
@@ -71,9 +72,30 @@ fn scan_vector() {
     }
 }
 
+#[derive(Debug)]
+enum SpreadsheetCell {
+    Int(i32),
+    Float(f64),
+    Text(String),
+}
+
+fn keep_enum() {
+    // vecは一つの型しか保持できないが，enumが複数の型を表現できるため，rustでは割と自由
+    let rows = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("brue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+
+    for row in &rows {
+        println!("{:?}", row);
+    }
+}
+
 fn main() {
     instantiate_vector();
     read_vector();
     try_to_push_to_ownershiped_vector();
     scan_vector();
+    keep_enum();
 }

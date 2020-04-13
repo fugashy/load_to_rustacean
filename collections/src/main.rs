@@ -92,10 +92,102 @@ fn keep_enum() {
     }
 }
 
+// 文字列について
+// 本当は結構複雑なんですよ
+// rustでは言語の核としては
+//  - 1種類しか文字列型は存在しない(文字列スライスのstr型)
+// String型は核ではなく，標準ライブラリで提供される
+//  - これは可変・伸長可能で所有権で管理される型
+//  - UTF-8エンコード
+
+fn instantiate_string() {
+    let _data = "initial contents";
+
+    let _s = _data.to_string();
+
+    let s = "initial contents".to_string();
+
+    println!("{}", s);
+}
+
+fn hello() {
+    let hello = String::from("hogehoge");
+    println!("{}", hello);
+    let hello = String::from("Dobrý den");
+    println!("{}", hello);
+    let hello = String::from("Hello");
+    println!("{}", hello);
+    let hello = String::from("שלֹום");
+    println!("{}", hello);
+    let hello = String::from("नमस्ते");
+    println!("{}", hello);
+    let hello = String::from("こんにちは");
+    println!("{}", hello);
+}
+
+fn push_str() {
+    // 文字列スライスを追加してStringを伸ばす
+    let mut s = String::from("foo");
+    s.push_str("bat");
+    println!("s is {}", s);
+
+    let mut s1 = String::from("foo");
+    let s2 = "bar";
+
+    // push_strは所有権を奪わない
+    s1.push_str(s2);
+    println!("s1 is {}", s1);
+    // 表示できる
+    println!("s2 is {}", s2);
+    // std::fmt::Pointerが実装されていないとアドレスの表示ができない
+    println!("address of s2 is: {:p}", s2);
+}
+
+fn conbine() {
+    let s1 = String::from("hello, ");
+    let s2 = String::from("world");
+    // +演算子は&strを取る関数
+    // add(self, s: &str) -> String { ... }
+    // 文字列の参照を追加する意味
+    // 第2引数にあたえているs2は&Stringだが，型強制をしてくれる（される）
+    // 第1引数selfは所有権を奪う->s1はmoveされる
+    let s3 = s1 + &s2;
+    // s1はmoveされるので使えない
+    // Copyトレイトが実装されていないため
+    // println!("s1 is {}", s1);
+    println!("s2 is {}", s2);
+    println!("s3 is {}", s3);
+}
+
+fn conbine_complex_string() {
+    // 素でやるばあい
+    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
+
+    let s = s1 + "-" + &s2 + "-" + &s3;
+    println!("{}", s);
+    // アウト
+    // println!("{}", s1);
+
+    // マクロを使う場合
+    let s4 = String::from("tic");
+    let s5 = String::from("tac");
+    let s6 = String::from("toe");
+    // これも所有権を奪わない
+    let s = format!("{}-{}-{}", s4, s5, s6);
+    println!("{}", s);
+}
+
 fn main() {
     instantiate_vector();
     read_vector();
     try_to_push_to_ownershiped_vector();
     scan_vector();
     keep_enum();
+    instantiate_string();
+    hello();
+    push_str();
+    conbine();
+    conbine_complex_string();
 }

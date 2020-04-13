@@ -1,4 +1,7 @@
 // vector, string, hashmapの使い方・注意点など
+// VecやStringは使用頻度が高いので初期化処理で自動的にスコープに導入される
+// HashMapはそうではない(..)
+use std::collections::HashMap;
 
 fn instantiate_vector() {
     // 素直?な宣言
@@ -211,6 +214,20 @@ fn scan_string() {
     }
 }
 
+fn insantiate_hashmap() {
+    let mut scores = HashMap::new();
+    // キー・値はすべて同じ型でなければならない
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+    println!("{:?}", scores);
+
+    let teams = vec![String::from("Blue"), String::from("Yellow")];
+    let initial_scores = vec![10, 50];
+
+    let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
+    println!("{:?}", scores);
+}
+
 fn main() {
     instantiate_vector();
     read_vector();
@@ -224,4 +241,5 @@ fn main() {
     conbine_complex_string();
     access_element_of_string();
     scan_string();
+    insantiate_hashmap();
 }

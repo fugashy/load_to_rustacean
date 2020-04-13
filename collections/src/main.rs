@@ -179,6 +179,38 @@ fn conbine_complex_string() {
     println!("{}", s);
 }
 
+fn access_element_of_string() {
+    let _s1 = String::from("hello");
+    // rustでは添字アクセスをサポートしていない
+    // let h = s1[0];
+
+    // なぜかを調べる
+    // 直感通り4bytes
+    // utf-8でエンコードすると1byteとなる
+    let len = String::from("Hola").len();
+    println!("lenght of Hola is: {}", len);
+    // 12と見せかけて24bytes
+    // 各Unicodeスカラー値は2byteの領域を取る
+    // ということで，添字記法は必ずしも有効なUnicodeのスカラー値と対応するわけではない
+    let len = String::from("Здравствуйте").len();
+    println!("lenght of Hola is: {}", len);
+
+    // スライシングはできる
+    let a = "Здравствуйте";
+    println!("{}", &a[0..2]);
+    // println!("{}", &a[0..3]); // これはだめ(境界ではないと言われる)
+    println!("{}", &a[0..4]);
+}
+
+fn scan_string() {
+    for c in "Hola".chars() {
+        println!("{}", c);
+    }
+    for c in "Hola".bytes() {
+        println!("{}", c);
+    }
+}
+
 fn main() {
     instantiate_vector();
     read_vector();
@@ -190,4 +222,6 @@ fn main() {
     push_str();
     conbine();
     conbine_complex_string();
+    access_element_of_string();
+    scan_string();
 }

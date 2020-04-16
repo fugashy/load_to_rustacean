@@ -221,11 +221,99 @@ fn insantiate_hashmap() {
     scores.insert(String::from("Yellow"), 50);
     println!("{:?}", scores);
 
+    // それぞれの配列を組み合わせて作ることもできる
     let teams = vec![String::from("Blue"), String::from("Yellow")];
     let initial_scores = vec![10, 50];
-
     let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
     println!("{:?}", scores);
+}
+
+fn ownership_of_hashmap() {
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    // insertしたときに所有権は奪われる
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // ので，ここでは使えない
+    // println!("field name is: {}", field_name);
+    // println!("field value is: {}", field_value);
+    println!("{:?}", map);
+
+    let mut map2 = HashMap::new();
+    let field_name2 = String::from("Favorite food");
+    let field_value2 = String::from("Pork");
+    map2.insert(&field_name2, &field_value2);
+
+    // cannot move out of `field_name2` because it is borrowed
+    // すでにmap2で借用されているため所有権をxxxx2から移すことができない
+    // けっこうしっかりみられている
+    // map.insert(field_name2, field_value2);
+
+    println!("{:?}", map2);
+}
+
+fn access_to_hashmap() {
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    let score = scores.get("Blue").unwrap();
+    println!("color is: {:?}", score);
+
+    for (key, value) in scores {
+        println!("{}: {}", key, value);
+    }
+}
+
+fn update_hashmap() {
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+    // update
+    scores.insert(String::from("Blue"), 25);
+    scores.insert(String::from("Yellow"), 50);
+
+    for (key, value) in scores {
+        println!("{}: {}", key, value);
+    }
+}
+
+fn insert_if_no_value() {
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+    // vacantなentry
+    println!(
+        "entry of Yellow is: {:?}",
+        scores.entry(String::from("Yellow"))
+    );
+    // occupiedなentry
+    println!("entry of Blue is: {:?}", scores.entry(String::from("Blue")));
+
+    // Entry::or_insertはVacantだったら引数をこのキーの新しい値として挿入し，新しい値への可変参照を返します
+    scores.entry(String::from("Yellow")).or_insert(50);
+    scores.entry(String::from("Blue")).or_insert(30);
+
+    for (key, value) in scores {
+        println!("{}: {}", key, value);
+    }
+}
+
+fn update_based_on_an_old_value() {
+    let text = "hello world wonderful world";
+
+    let mut map = HashMap::new();
+
+    for word in text.split_whitespace() {
+        // or_insertは値への可変参照を返す
+        let count = map.entry(word).or_insert(0);
+        // 参照外しをして値を変更する
+        *count += 1;
+    }
+    for (key, value) in map {
+        println!("{}: {}", key, value);
+    }
 }
 
 fn main() {
@@ -242,4 +330,9 @@ fn main() {
     access_element_of_string();
     scan_string();
     insantiate_hashmap();
+    ownership_of_hashmap();
+    access_to_hashmap();
+    update_hashmap();
+    insert_if_no_value();
+    update_based_on_an_old_value();
 }

@@ -61,6 +61,8 @@ fn main() {
             }
         };
 
+        // 意図しない数の場合は再入力を要求するようにする
+        // the bookでは不正な値はpanicにしているが，このプログラムでは再入力のほうがいいと思った
         let guess: Guess = match Guess::new(num) {
             Ok(g) => g,
             Err(s) => {

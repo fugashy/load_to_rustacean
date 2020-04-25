@@ -67,10 +67,43 @@ impl<T> Point<T> {
     }
 }
 
+// 特定の型にのみ実装することもできる
+impl Point<f32> {
+    fn distance_from_origin(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+
+struct Pair<T, U> {
+    x: T,
+    y: U,
+}
+
+impl<T, U> Pair<T, U> {
+    // genericなクラスへの関数実装
+    fn mixup<V, W>(self, other: Pair<V, W>) -> Pair<T, W> {
+        Pair {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
 fn echo_point() {
     let p = Point { x: 5, y: 10 };
     println!("p.x is: {}", p.x());
     println!("p.y is: {}", p.y());
+    // f32のみに実装された関数はコールできない
+    // println!("distance_from_origin: {}", p.distance_from_origin());
+    let p = Point { x: 5.0, y: 3.0 };
+    println!("distance_from_origin: {}", p.distance_from_origin());
+}
+
+fn echo_pair() {
+    let a = Pair { x: 4.0, y: 3 };
+    let b = Pair { x: "Hello", y: 'c' };
+    let c = a.mixup(b);
+    println!("mixup: {}, {}", c.x, c.y);
 }
 
 fn main() {
@@ -78,4 +111,5 @@ fn main() {
     test_largest_char();
     test_generic_largest();
     echo_point();
+    echo_pair();
 }

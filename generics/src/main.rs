@@ -53,8 +53,29 @@ fn test_generic_largest() {
     println!("The largest char is: {}", largest(&char_list));
 }
 
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+    fn y(&self) -> &T {
+        &self.y
+    }
+}
+
+fn echo_point() {
+    let p = Point { x: 5, y: 10 };
+    println!("p.x is: {}", p.x());
+    println!("p.y is: {}", p.y());
+}
+
 fn main() {
     test_largest_i32();
     test_largest_char();
     test_generic_largest();
+    echo_point();
 }

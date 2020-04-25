@@ -1,3 +1,7 @@
+// lib.rsで定義されたものを使うよ
+extern crate generics;
+// その中でも，Summaryも使うよ
+use crate::generics::Summary;
 // listはi32のスライスを意味する
 fn largest_i32(list: &[i32]) -> i32 {
     let mut largest = list[0];
@@ -106,10 +110,21 @@ fn echo_pair() {
     println!("mixup: {}, {}", c.x, c.y);
 }
 
+fn use_traits() {
+    let tweet = generics::Tweet {
+        username: String::from("fugashy"),
+        content: String::from("Hello trait world"),
+        reply: false,
+        retweet: false,
+    };
+    println!("Summary of tweet: {}", tweet.summarize());
+}
+
 fn main() {
     test_largest_i32();
     test_largest_char();
     test_generic_largest();
     echo_point();
     echo_pair();
+    use_traits();
 }

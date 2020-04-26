@@ -120,6 +120,41 @@ fn use_traits() {
     println!("Summary of tweet: {}", tweet.summarize());
 }
 
+// 以降ではライフタイムについて触れる
+// 目的は，ダングリング参照を回避すること
+
+//  fn does_not_live_long_enough() {
+//      let r;
+//      {
+//          let s = 5;
+//          r = &s;
+//          // ここでsはドロップされる
+//      }
+//      // rが参照するものはない
+//      println!("r: {}", r);
+//  }
+
+// この関数は，実際にどの参照を返すのかが，実行前に判断できないので，
+// 借用チェッカーが解析できない
+// それぞれの生存期間が現時点で不明なため，ライフタイム指定子を要求する
+// 'aで指定したライフタイム分だけ，両者は存在することをコンパイラに伝える
+// そのような引数を与えることをユーザーに知らせる
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn get_longest() {
+    let s1 = String::from("abdc");
+    let s2 = "xyz";
+
+    let result = longest(s1.as_str(), s2);
+    println!("Longest string is: {}", result);
+}
+
 fn main() {
     test_largest_i32();
     test_largest_char();
@@ -127,4 +162,6 @@ fn main() {
     echo_point();
     echo_pair();
     use_traits();
+    // does_not_live_long_enough();
+    get_longest();
 }

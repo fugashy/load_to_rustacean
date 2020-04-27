@@ -151,8 +151,31 @@ fn get_longest() {
     let s1 = String::from("abdc");
     let s2 = "xyz";
 
-    let result = longest(s1.as_str(), s2);
-    println!("Longest string is: {}", result);
+    // ライフタイムの長さが一緒なので特に問題なし
+    let r1 = longest(s1.as_str(), s2);
+    println!("Longest string is: {}", r1);
+
+    // 文字列スライスの生存期間を変えてみた
+    // これは問題なし
+    // 返した参照がs4だとしても，r2に返される場合はライフタイムがs3と等しくなるため大丈夫
+    let s3 = String::from("ab");
+    let r2;
+    {
+        // 文字列スライスはDropが実装されてない
+        let s4 = "xyz";
+        r2 = longest(s3.as_str(), &s4);
+    }
+    println!("Longest string is: {}", r2);
+
+    // これはアウト
+    // s6がDropすると，参照を返しても元が失われる
+    //  let s5 = String::from("ab");
+    //  let r3;
+    //  {
+    //      let s6 = String::from("xyz");
+    //      r3 = longest(s5.as_str(), s6.as_str());
+    //  }
+    //  println!("Longest string is: {}", r3);
 }
 
 fn main() {

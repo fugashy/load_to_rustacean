@@ -178,6 +178,19 @@ fn get_longest() {
     //  println!("Longest string is: {}", r3);
 }
 
+struct ImportantExcept<'a> {
+    part: &'a str,
+}
+
+fn sample_of_lifetime_specified_struct() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+    let i = ImportantExcept {
+        part: first_sentence,
+    };
+    println!("first_sentence is: {}", i.part);
+}
+
 fn main() {
     test_largest_i32();
     test_largest_char();
@@ -187,4 +200,5 @@ fn main() {
     use_traits();
     // does_not_live_long_enough();
     get_longest();
+    sample_of_lifetime_specified_struct();
 }

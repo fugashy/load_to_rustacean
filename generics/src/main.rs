@@ -189,6 +189,20 @@ fn sample_of_lifetime_specified_struct() {
         part: first_sentence,
     };
     println!("first_sentence is: {}", i.part);
+
+    {
+        let j = ImportantExcept {
+            part: first_sentence,
+        };
+        println!("first_sentence is: {}", j.part);
+    }
+    let k;
+    {
+        k = ImportantExcept {
+            part: first_sentence,
+        };
+    }
+    println!("first_sentence is: {}", k.part);
 }
 
 fn main() {

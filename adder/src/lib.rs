@@ -6,8 +6,13 @@
 mod tests {
     // テスト関数であることを示唆する
     #[test]
-    fn it_works() {
+    fn exploration() {
         // アサーションマクロ
         assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    fn another() {
+        panic!("Make this test fail");
     }
 }

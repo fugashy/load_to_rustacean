@@ -205,6 +205,19 @@ fn sample_of_lifetime_specified_struct() {
     println!("first_sentence is: {}", k.part);
 }
 
+fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+where
+    T: std::fmt::Display,
+{
+    println!("Announcement: {}", ann);
+
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
 fn main() {
     test_largest_i32();
     test_largest_char();
@@ -215,4 +228,5 @@ fn main() {
     // does_not_live_long_enough();
     get_longest();
     sample_of_lifetime_specified_struct();
+    longest_with_an_announcement("a", "b", "hogehoge");
 }

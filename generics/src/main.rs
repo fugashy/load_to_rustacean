@@ -205,6 +205,11 @@ fn sample_of_lifetime_specified_struct() {
     println!("first_sentence is: {}", k.part);
 }
 
+// これまで参照を引数にする関数はたくさん作ってきたが，必ずしも，ライフタイムを指定する必要はなかった
+// これは，借用チェッカーの実装によるところで，Rustの改善の歴史の中で進化してきたもの
+// より省けるか，という点について改善がなされてきている
+// そのルールについては気になったら都度調べよう
+// どうせ忘れる
 fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
 where
     T: std::fmt::Display,

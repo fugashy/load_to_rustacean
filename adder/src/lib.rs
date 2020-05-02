@@ -15,6 +15,12 @@ impl Rectangle {
     }
 }
 
+// pubにしないと内部関数となる
+// この場合，使われないとdead_codeワーニングがでる
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
 #[cfg(test)]
 mod tests {
     // テスト関数であることを示唆する
@@ -55,5 +61,12 @@ mod tests {
             width: 1,
         };
         assert!(!smaller.can_hold(&larger));
+    }
+
+    use super::add_two;
+
+    #[test]
+    fn it_add_two() {
+        assert_eq!(4, add_two(2));
     }
 }

@@ -1,5 +1,5 @@
 pub struct Guess {
-    pub value: u32,
+    value: u32,
 }
 
 impl Guess {

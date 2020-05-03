@@ -6,29 +6,10 @@ extern crate rand;
 // トレイトについてはまた...
 use rand::Rng;
 use std::cmp::Ordering;
-use std::fmt;
 use std::io;
 
-pub struct Guess {
-    value: u32,
-}
-
-impl Guess {
-    pub fn new(value: u32) -> Result<Guess, String> {
-        if value < 1 || 100 < value {
-            return Err(String::from("Guess value must be between 1 and 100"));
-        }
-        Ok(Guess { value })
-    }
-    pub fn value(&self) -> u32 {
-        self.value
-    }
-}
-impl std::fmt::Display for Guess {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "value: {}", self.value)
-    }
-}
+extern crate guessing_game;
+use guessing_game::Guess;
 
 fn main() {
     println!("Guess the number!");

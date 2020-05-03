@@ -58,34 +58,8 @@ fn instanciate_tuple_structs() {
     let _origin = Point(0, 0, 0);
 }
 
-// Debugを継承することでstd::fmt::Debugが提供される
-#[derive(Debug)]
-struct Rectangle {
-    width: u32,
-    height: u32,
-}
-impl Rectangle {
-    // Rectangleの文脈中にあることがコンパイラが理解できるので，selfでよい
-    // 自分自身を不変参照で借用している
-    fn area(&self) -> u32 {
-        self.width * self.height
-    }
-
-    fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width > other.width && self.height > other.height
-    }
-}
-// implブロックでは内部関数だけでなく，関連する関数も定義できる
-// 複数のimplブロックを作ることもできる
-// いつか役に立つ
-impl Rectangle {
-    fn square(size: u32) -> Rectangle {
-        Rectangle {
-            width: size,
-            height: size,
-        }
-    }
-}
+extern crate structs;
+use structs::Rectangle;
 
 fn instanciate_rectangle() {
     let rect1 = Rectangle {

@@ -25,20 +25,19 @@ mod tests {
 
     #[test]
     fn retun_ok() {
-        let r: std::result::Result<Guess, String> = Guess::new(100);
-        let g = match r {
-            Ok(guess) => guess,
-            Err(e) => panic!("Error: {:?}", e),
-        };
-        assert_eq!(g.value(), 100);
+        let r = Guess::new(100).unwrap();
+        assert_eq!(r.value(), 100);
     }
 
     #[test]
-    fn return_err() {
-        let r: std::result::Result<Guess, String> = Guess::new(101);
-        let _g = match r {
-            Ok(_guess) => panic!("Error"),
-            Err(e) => e,
-        };
+    #[should_panic(expected = "Guess value must be between 1 and 100")]
+    fn a_value_that_is_larger_than_100_should_panic() {
+        Guess::new(101).unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected = "Guess value must be between 1 and 100")]
+    fn a_value_that_is_less_than_1_should_panic() {
+        Guess::new(0).unwrap();
     }
 }

@@ -33,6 +33,32 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     f.read_to_string(&mut contents)
         .expect("Something went wrong reading the file");
 
+    let _r = search(&config.query, &contents);
+
     println!("With text:\n{}", contents);
     Ok(())
+}
+
+// Rust素人的には，素直なシグネチャで書いてしまう．
+// 実際コンパイルすると，strはコンパイル時にサイズがわからないのでエラーになる
+// ライフタイムについてジェネリックにならないと行けない
+// この場合，入力されたコンテンツとアウトプットは共通のオブジェクトから借用されているはずなので，
+// ライフタイムを一緒にする
+fn search<'a>(_query: &str, _contents: &'a str) -> Vec<&'a str> {
+    vec![]
+}
+
+#[cfg(test)]
+mod unit_tests {
+    use super::search;
+
+    #[test]
+    fn search_collectly() {
+        let query = "duct";
+        let contents = "\
+        Rust:
+        safe, fast, productive.
+        Pick three.";
+        assert_eq!(search(query, contents), vec!["safe, fast, productive."]);
+    }
 }

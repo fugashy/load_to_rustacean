@@ -44,8 +44,18 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 // ライフタイムについてジェネリックにならないと行けない
 // この場合，入力されたコンテンツとアウトプットは共通のオブジェクトから借用されているはずなので，
 // ライフタイムを一緒にする
-fn search<'a>(_query: &str, _contents: &'a str) -> Vec<&'a str> {
-    vec![]
+fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    // これはcontentsから生成されたStringが，このステートメントでDropするのでだめ
+    // let c = contents.to_string().matches(query);
+
+    let mut result = Vec::new();
+    // TODO(fugashy) str型が提供している関数を調べよう
+    for line in contents.lines() {
+        if line.contains(query) {
+            result.push(line);
+        }
+    }
+    result
 }
 
 #[cfg(test)]
@@ -56,9 +66,9 @@ mod unit_tests {
     fn search_collectly() {
         let query = "duct";
         let contents = "\
-        Rust:
-        safe, fast, productive.
-        Pick three.";
+Rust:
+safe, fast, productive.
+Pick three.";
         assert_eq!(search(query, contents), vec!["safe, fast, productive."]);
     }
 }

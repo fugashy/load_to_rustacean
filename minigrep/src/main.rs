@@ -1,10 +1,8 @@
 use std::env;
-use std::fs::File;
-// 入出力処理に有用なトレイトを含んでいる
-use std::io::prelude::*;
 use std::process;
 
 extern crate minigrep;
+use minigrep::run;
 use minigrep::Config;
 
 fn main() {
@@ -15,14 +13,9 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Searching for: {}", c.query);
-    println!("In file: {}", c.filename);
-
-    let mut f = File::open(c.filename).expect("Failed to find");
-
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)
-        .expect("Something went wrong reading the file");
-
-    println!("With text:\n{}", contents);
+    // runがErrを返したかどうか
+    if let Err(e) = run(c) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }
 }

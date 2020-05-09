@@ -33,9 +33,9 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     f.read_to_string(&mut contents)
         .expect("Something went wrong reading the file");
 
-    let _r = search(&config.query, &contents);
-
-    println!("With text:\n{}", contents);
+    for line_contains_query in search(&config.query, &contents) {
+        println!("{}", line_contains_query);
+    }
     Ok(())
 }
 

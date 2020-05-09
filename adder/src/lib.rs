@@ -36,7 +36,7 @@ pub fn avoid_dead_code() {
 
 // 単体テストをするときはcfg(test)を使うことが慣例になっている
 #[cfg(test)]
-mod tests {
+mod unit_tests {
     // テスト関数であることを示唆する
     #[test]
     // 無視することもできる

@@ -103,4 +103,46 @@ pub mod closures {
         generate_workout_with_closure(26, random_value);
         generate_workout_with_closure(25, random_value);
     }
+
+    // 値を不変で借用する
+    // Fnトレイトの性質
+    pub fn fn_trait() {
+        // Copyトレイトあり
+        let x = 3;
+        let y = 3;
+        let equal_to_x = |z| z == x;
+        let _result = equal_to_x(y);
+        println!("x is alive: {}", x);
+
+        // Copyトレイトなし
+        let a = vec![1, 2, 3];
+        let b = vec![1, 3, 2];
+        // aを不変借用
+        let equal_to_a = |c| c == a;
+        let _result = equal_to_a(b);
+        println!("a is alive: {:?}", a);
+    }
+
+    // 値の所有権を奪う
+    // FnOnceトレイトの性質
+    pub fn fn_once_trait() {
+        // Copyトレイトあり
+        let x = 2;
+        let y = 3;
+        let equal_to_x = move |z| z == x;
+        let _result = equal_to_x(y);
+        // Dropないから大丈夫
+        println!("x is alive: {}", x);
+
+        // Copyトレイトなし
+        let a = vec![1, 2, 3];
+        let b = vec![1, 2, 3];
+        // aの所有権を奪う
+        let equal_to_a = move |c| c == a;
+        // aはもういない
+        // println!("a is alive: {:?}", a);
+        println!("a is dead:");
+        // 一度Callすると消費されるので，二回目は呼ばれない
+        let _result = equal_to_a(b);
+    }
 }

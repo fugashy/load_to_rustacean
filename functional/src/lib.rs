@@ -104,6 +104,38 @@ pub mod closures {
         generate_workout_with_closure(25, random_value);
     }
 
+    // いつもc++でやるような，関数の引数にclosureを与えるパターン
+    // あえて渡す必要のない例かもしれないが
+    fn generate_workout_with_closure_improved<F: Fn(u32) -> u32>(
+        intensity: u32,
+        random_number: u32,
+        expensive_function: F,
+    ) {
+        let expensive_result = expensive_function(intensity);
+        if intensity > 25 {
+            println!("Today, do {} pushups", expensive_result);
+            println!("Next, do {} situps", expensive_result);
+        } else {
+            if random_number == 3 {
+                println!("Take a break today! Remember to stray hydrated");
+            } else {
+                println!("Today, run for {} minites", expensive_result);
+            }
+        }
+    }
+
+    pub fn run_with_closure_improved() {
+        println!("generate with closure improved");
+        let random_value = rand::thread_rng().gen_range(1, 5);
+        let expensive_function = |intensity: u32| -> u32 {
+            println!("calculating slowly...");
+            std::thread::sleep(std::time::Duration::from_secs(2));
+            intensity
+        };
+        generate_workout_with_closure_improved(26, random_value, expensive_function);
+        generate_workout_with_closure_improved(25, random_value, expensive_function);
+    }
+
     // 値を不変で借用する
     // Fnトレイトの性質
     pub fn fn_trait() {

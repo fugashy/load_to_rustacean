@@ -1,3 +1,5 @@
+extern crate functional;
+
 fn main() {
-    println!("Hello, world!");
+    functional::closures::run_without_closure();
 }

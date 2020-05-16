@@ -188,9 +188,11 @@ pub mod iterators {
 
         // イテレータは怠惰である，と表現されている
         // それを使って何かをしない限りは，特に仕事をしないということ
+        // 使われてなんぼ
         let v1_it = v1.iter();
 
         // * 所有権移動します
+        // forでiterを使うときにmutにする必要がないのは...まぁ後でいいや
         for val in v1_it {
             println!("simple_iteration: {}", val);
         }

@@ -180,3 +180,55 @@ pub mod closures {
         let _result = equal_to_a(b);
     }
 }
+
+pub mod iterators {
+    // これまでの例で出てきた流れの再掲
+    pub fn simple_iteration() {
+        let v1 = vec![1, 2, 3];
+
+        // イテレータは怠惰である，と表現されている
+        // それを使って何かをしない限りは，特に仕事をしないということ
+        let v1_it = v1.iter();
+
+        // * 所有権移動します
+        for val in v1_it {
+            println!("simple_iteration: {}", val);
+        }
+
+        // 使えません
+        // nextを使うときはv1_itはmutにしてね
+        // println!("{}", v1_it.next().unwrap());
+    }
+
+    // 手動で要素のスキャンをする
+    pub fn next() {
+        let v1 = vec![1, 2, 3];
+
+        // next()を使うならmutにすべし
+        let mut v1_it = v1.iter();
+
+        println!("{}", v1_it.next().unwrap()); // 1
+        println!("{}", v1_it.next().unwrap()); // 2
+        println!("{}", v1_it.next().unwrap()); // 3
+
+        // none value
+        // println!("{}", v1_it.next().unwrap());
+    }
+
+    // iterは消費アイテム
+    // それを使うメソッドによって所有権は移動する
+    pub fn sum() {
+        let v1 = vec![1, 2, 3];
+        let v1_it = v1.iter();
+
+        // iterの所有権は奪われる
+        // このステートメントでDropする
+        let sum: i32 = v1_it.sum();
+
+        // なので使えませんよ
+        // nextを使うときはv1_itはmutにしてね
+        // println!("{}", v1_it.next().unwrap());
+
+        println!("use_sum: sum is {}", sum);
+    }
+}

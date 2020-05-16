@@ -7,4 +7,8 @@ fn main() {
 
     functional::closures::fn_trait();
     functional::closures::fn_once_trait();
+
+    functional::iterators::simple_iteration();
+    functional::iterators::next();
+    functional::iterators::sum();
 }

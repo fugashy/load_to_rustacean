@@ -38,6 +38,8 @@ pub mod closures {
     // closureはFnトレイト，FnMut，FnOnceトレイトのどれかを実装している
     // 今回はFnを使ってみる
     // トレイト境界を見るとclosureだなと，rustマンにはわかる
+    // この状態だと，引数を変えて計算し直しができない点に注意したほうがいい
+    // TheBookに書いてあるからと言ってすべてすばらしいサンプルなのだ，とは思わないこと
     struct Cacher<T>
     where
         T: Fn(u32) -> u32, // 引数x1でその引数と同じ型の値を返すclosureであることが一目瞭然

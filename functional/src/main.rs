@@ -13,4 +13,7 @@ fn main() {
     functional::iterators::sum();
     functional::iterators::map();
     functional::iterators::filter();
+
+    functional::iterators::call_next_directly();
+    functional::iterators::using_other_iterator_trait_methods();
 }

@@ -249,4 +249,48 @@ pub mod iterators {
 
         println!("filtered v1 is: {:?}", v2);
     }
+
+    struct Counter {
+        count: u32,
+    }
+    impl Counter {
+        fn new() -> Counter {
+            Counter { count: 0 }
+        }
+    }
+    impl Iterator for Counter {
+        type Item = u32;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            self.count += 1;
+
+            if self.count < 6 {
+                Some(self.count)
+            } else {
+                None
+            }
+        }
+    }
+
+    pub fn call_next_directly() {
+        let mut counter = Counter::new();
+
+        println!("call counter.next: {}", counter.next().unwrap()); // 1
+        println!("call counter.next: {}", counter.next().unwrap()); // 2
+        println!("call counter.next: {}", counter.next().unwrap()); // 3
+        println!("call counter.next: {}", counter.next().unwrap()); // 4
+        println!("call counter.next: {}", counter.next().unwrap()); // 5
+
+        // none
+        // println!("{}", counter.next().unwrap());
+    }
+
+    pub fn using_other_iterator_trait_methods() {
+        let sum: u32 = Counter::new() // 1から開始（1, 2, 3, 4, 5, None, ...)
+            .zip(Counter::new().skip(1)) // 1つ飛ばす(2, 3, 4, 5, None, ...）
+            .map(|(a, b)| a * b) // (2, 6, 12, 20, None, ...)
+            .filter(|x| x % 3 == 0) // (6, 12)
+            .sum(); // 18 !
+        println!("Complex sample value is: {}", sum);
+    }
 }

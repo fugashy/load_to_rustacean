@@ -1,3 +1,4 @@
+use std::env;
 use std::error::Error;
 use std::fs::File;
 // 入出力処理に有用なトレイトを含んでいる
@@ -12,12 +13,19 @@ impl Config {
     // ライフタイム指定子をstaticにするのはなんでだろう
     // -> コンパイル時にサイズがわからないためとのこと
     // シグネチャとして，厳格にチェックされている（あとでせっていされていたとしても）
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments.");
-        }
-        let query = args[1].clone();
-        let filename = args[2].clone();
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
+        // プログラム名なのでスキップ
+        // 消費してしまえ
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Failed to get query string"),
+        };
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Failed to get filename string"),
+        };
 
         Ok(Config { query, filename })
     }
@@ -48,14 +56,23 @@ fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     // これはcontentsから生成されたStringが，このステートメントでDropするのでだめ
     // let c = contents.to_string().matches(query);
 
-    let mut result = Vec::new();
-    // TODO(fugashy) str型が提供している関数を調べよう
-    for line in contents.lines() {
-        if line.contains(query) {
-            result.push(line);
-        }
-    }
-    result
+    // iteratorを使う前はおなじみのfor文で頑張っていた
+    //  let mut result = Vec::new();
+    //  // TODO(fugashy) str型が提供している関数を調べよう
+    //  for line in contents.lines() {
+    //      if line.contains(query) {
+    //          result.push(line);
+    //      }
+    //  }
+    //  result
+    //
+    // iteratorでfilterを使えば簡潔
+    // こっちのほうが早いらしい
+    // TODO(fugashy) ゼロ代償抽象化とやらを調べよう
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 #[cfg(test)]

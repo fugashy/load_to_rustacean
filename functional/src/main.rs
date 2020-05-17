@@ -11,4 +11,6 @@ fn main() {
     functional::iterators::simple_iteration();
     functional::iterators::next();
     functional::iterators::sum();
+    functional::iterators::map();
+    functional::iterators::filter();
 }

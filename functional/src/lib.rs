@@ -39,7 +39,7 @@ pub mod closures {
     // 今回はFnを使ってみる
     // トレイト境界を見るとclosureだなと，rustマンにはわかる
     // この状態だと，引数を変えて計算し直しができない点に注意したほうがいい
-    // TheBookに書いてあるからと言ってすべてすばらしいサンプルなのだ，とは思わないこと
+    // Hashマップの保持をするとかしよう
     struct Cacher<T>
     where
         T: Fn(u32) -> u32, // 引数x1でその引数と同じ型の値を返すclosureであることが一目瞭然
@@ -232,5 +232,21 @@ pub mod iterators {
         // println!("{}", v1_it.next().unwrap());
 
         println!("use_sum: sum is {}", sum);
+    }
+
+    pub fn map() {
+        let v1 = vec![1, 2, 3];
+        // mapはクロージャをとる
+        let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+
+        println!("mapped v1 is: {:?}", v2);
+    }
+
+    pub fn filter() {
+        let v1 = vec![1, 2, 3];
+        // filterは論理値を返すクロージャをとる
+        let v2: Vec<_> = v1.iter().filter(|x| *x % 2 == 0).collect();
+
+        println!("filtered v1 is: {:?}", v2);
     }
 }

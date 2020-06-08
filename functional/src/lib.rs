@@ -4,6 +4,9 @@
 // 下記が特徴的(C++比)
 // - キャプチャ対象にも所有権の仕組みが適応されること
 // - キャプチャの方式毎にクロージャの型が存在すること
+// -- Fn
+// -- FnOnce
+// -- FnMut
 pub mod closures {
     extern crate rand;
     use rand::Rng;
@@ -157,20 +160,21 @@ pub mod closures {
         let y = 3;
         let equal_to_x = |z| z == x;
         let _result = equal_to_x(y);
-        println!("x is alive: {}", x);
+        println!("x is alive: {}", x); // 3
 
         // Copyトレイトなし
         let a = vec![1, 2, 3];
         let b = vec![1, 3, 2];
         // aを不変借用
         let equal_to_a = |c| c == a;
-        let _result = equal_to_a(b);
+        let result = equal_to_a(b);
         println!("a is alive: {:?}", a);
+
+        println!("result: {:?}", result); // false
     }
 
-    // 値の所有権を奪う
-    // FnOnceトレイトの性質
-    pub fn fn_once_trait() {
+    // 値の所有権を奪うことを強制するmoveキーワード
+    pub fn fn_move() {
         // Copyトレイトあり
         let x = 2;
         let y = 3;
@@ -178,17 +182,21 @@ pub mod closures {
         let _result = equal_to_x(y);
         // Dropないから大丈夫
         println!("x is alive: {}", x);
+        // 2回呼べる
+        let _result = equal_to_x(y);
+        println!("x is alive, again: {}", x);
 
         // Copyトレイトなし
         let a = vec![1, 2, 3];
         let b = vec![1, 2, 3];
-        // aの所有権を奪う
-        let equal_to_a = move |c| c == a;
-        // aはもういない
+        // moveキーワードでaの所有権を奪う
+        let equal_to_a = move |c| c == a; // variable 'a' moved due to use in closure
+
+        // aはもういない. 下のprintlnは怒られる
         // println!("a is alive: {:?}", a);
-        println!("a is dead:");
-        // 一度Callすると消費されるので，二回目は呼ばれない
-        let _result = equal_to_a(b);
+
+        let result = equal_to_a(b); // variable 'b' moved due to use in closure
+        println!("result: {:?}", result); // true
     }
 }
 

@@ -14,6 +14,6 @@ fn main() {
     functional::iterators::map();
     functional::iterators::filter();
 
-    functional::iterators::call_next_directly();
+    functional::iterators::call_next_of_counter();
     functional::iterators::using_other_iterator_trait_methods();
 }

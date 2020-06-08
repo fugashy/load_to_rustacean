@@ -200,7 +200,11 @@ pub mod closures {
     }
 }
 
+// iteratorまとめ
+// - 構造はC++と似ている
 pub mod iterators {
+    use std::fmt;
+
     // これまでの例で出てきた流れの再掲
     pub fn simple_iteration() {
         let v1 = vec![1, 2, 3];
@@ -211,7 +215,8 @@ pub mod iterators {
         let v1_it = v1.iter();
 
         // * 所有権移動します
-        // forでiterを使うときにmutにする必要がないのは...まぁ後でいいや
+        // forでiterを使うときにmutにする必要がないのは...?
+        // rustのcoreな方でなんかしてくれているのだろう...きっと
         for val in v1_it {
             println!("simple_iteration: {}", val);
         }
@@ -226,6 +231,7 @@ pub mod iterators {
         let v1 = vec![1, 2, 3];
 
         // next()を使うならmutにすべし
+        // 内部変数に変更が行われるため
         let mut v1_it = v1.iter();
 
         println!("{}", v1_it.next().unwrap()); // 1
@@ -236,14 +242,14 @@ pub mod iterators {
         // println!("{}", v1_it.next().unwrap());
     }
 
-    // iterは消費アイテム
-    // それを使うメソッドによって所有権は移動する
+    // 総和を計算するメソッド
+    // 所有権を奪う
     pub fn sum() {
         let v1 = vec![1, 2, 3];
         let v1_it = v1.iter();
 
-        // iterの所有権は奪われる
-        // このステートメントでDropする
+        // sumメソッドでiterの所有権は奪われる
+        // v1_itはこの文でDropされる
         let sum: i32 = v1_it.sum();
 
         // なので使えませんよ
@@ -253,20 +259,22 @@ pub mod iterators {
         println!("use_sum: sum is {}", sum);
     }
 
+    // 任意のクロージャでコレクションを変換できる便利なやつ
     pub fn map() {
         let v1 = vec![1, 2, 3];
         // mapはクロージャをとる
         let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
 
-        println!("mapped v1 is: {:?}", v2);
+        println!("mapped v1 is: {:?}", v2); // [2, 3, 4]
     }
 
+    // 任意の判定式でコレクションを抽出する便利なやつ
     pub fn filter() {
         let v1 = vec![1, 2, 3];
         // filterは論理値を返すクロージャをとる
         let v2: Vec<_> = v1.iter().filter(|x| *x % 2 == 0).collect();
 
-        println!("filtered v1 is: {:?}", v2);
+        println!("filtered v1 is: {:?}", v2); // [2]
     }
 
     struct Counter {
@@ -277,7 +285,13 @@ pub mod iterators {
             Counter { count: 0 }
         }
     }
+    impl std::fmt::Display for Counter {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "counter: {}", self.count)
+        }
+    }
     impl Iterator for Counter {
+        // other methods are default ones
         type Item = u32;
 
         fn next(&mut self) -> Option<Self::Item> {
@@ -291,25 +305,35 @@ pub mod iterators {
         }
     }
 
-    pub fn call_next_directly() {
+    // nextを呼んでみる
+    pub fn call_next_of_counter() {
         let mut counter = Counter::new();
 
+        println!("the count is: {}", counter); // 0
         println!("call counter.next: {}", counter.next().unwrap()); // 1
+        println!("the count is: {}", counter); // 1
         println!("call counter.next: {}", counter.next().unwrap()); // 2
+        println!("the count is: {}", counter); // 2
         println!("call counter.next: {}", counter.next().unwrap()); // 3
+        println!("the count is: {}", counter); // 3
         println!("call counter.next: {}", counter.next().unwrap()); // 4
+        println!("the count is: {}", counter); // 4
         println!("call counter.next: {}", counter.next().unwrap()); // 5
+        println!("the count is: {}", counter); // 5
 
         // none
         // println!("{}", counter.next().unwrap());
     }
 
+    // rustライクに，複雑な処理を順序よく，わかりやすめに書く
+    // Iteratorトレイトを実装したため，実装していないその他のデフォルトメソッドが使用可能に
+    // これは楽だ
     pub fn using_other_iterator_trait_methods() {
         let sum: u32 = Counter::new() // 1から開始（1, 2, 3, 4, 5, None, ...)
             .zip(Counter::new().skip(1)) // 1つ飛ばす(2, 3, 4, 5, None, ...）
             .map(|(a, b)| a * b) // (2, 6, 12, 20, None, ...)
             .filter(|x| x % 3 == 0) // (6, 12)
             .sum(); // 18 !
-        println!("Complex sample value is: {}", sum);
+        println!("Complex sample value is: {}", sum); // 18
     }
 }

@@ -1,6 +1,13 @@
+// クロージャのまとめ
+// - C++と大体一緒
+// -- キャプチャ付きの匿名関数
+// 下記が特徴的(C++比)
+// - キャプチャ対象にも所有権の仕組みが適応されること
+// - キャプチャの方式毎にクロージャの型が存在すること
 pub mod closures {
     extern crate rand;
     use rand::Rng;
+    use std::collections::HashMap;
 
     fn simulated_expensive_calculation(intensity: u32) -> u32 {
         println!("calculating slowly...");
@@ -38,14 +45,12 @@ pub mod closures {
     // closureはFnトレイト，FnMut，FnOnceトレイトのどれかを実装している
     // 今回はFnを使ってみる
     // トレイト境界を見るとclosureだなと，rustマンにはわかる
-    // この状態だと，引数を変えて計算し直しができない点に注意したほうがいい
-    // Hashマップの保持をするとかしよう
     struct Cacher<T>
     where
         T: Fn(u32) -> u32, // 引数x1でその引数と同じ型の値を返すclosureであることが一目瞭然
     {
         calculation: T,
-        value: Option<u32>,
+        value_by_arg: HashMap<u32, u32>, // 引き数毎に結果を格納する
     }
 
     impl<T> Cacher<T>
@@ -55,26 +60,32 @@ pub mod closures {
         fn new(calculation: T) -> Cacher<T> {
             Cacher {
                 calculation,
-                value: None,
+                value_by_arg: HashMap::new(),
             }
         }
 
         fn value(&mut self, arg: u32) -> u32 {
-            match self.value {
-                Some(v) => v,
-                // 何もなかったときのみclosureをcallする
-                None => {
-                    let v = (self.calculation)(arg);
-                    self.value = Some(v);
-                    v
-                }
-            }
+            // or_insertは&mut u32を返してくる
+            // consider dereferencing the borrow
+            // デリファレンスして，値をHashmapの生存期間の外へ出す(という解釈で良いのだろうか)
+            *self
+                .value_by_arg
+                .entry(arg) // このキーは存在するのか
+                .or_insert((self.calculation)(arg)) // もしなければ追加する
+                                                    // to call the function stored in `calculation`,
+                                                    // surround the field access with parentheses
         }
     }
+
     #[test]
     fn expected_behaivior_of_cacher() {
-        let mut c = super::closures::Cacher::new(|n| n);
-        assert_eq!(c.value(3), 3);
+        let mut c = super::closures::Cacher::new(|n| n + 1);
+        // 設定したクロージャのアウトプットを返してくれる
+        assert_eq!(c.value(3), 4);
+        // ハッシュマップに登録されてない引き数を与えても大丈夫
+        assert_eq!(c.value(2), 3);
+        // 再現性を一応
+        assert_eq!(c.value(2), 3);
     }
 
     fn generate_workout_with_closure(intensity: u32, random_number: u32) {

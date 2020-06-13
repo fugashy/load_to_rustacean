@@ -5,8 +5,9 @@ fn main() {
     functional::closures::run_with_closure();
     functional::closures::run_with_closure_improved();
 
-    functional::closures::fn_trait();
-    functional::closures::fn_move();
+    functional::closures::several_ways_to_describe_closures();
+    functional::closures::capture_values_as_const_one();
+    functional::closures::capture_values_in_whole();
 
     functional::iterators::simple_iteration();
     functional::iterators::next();
@@ -16,4 +17,5 @@ fn main() {
 
     functional::iterators::call_next_of_counter();
     functional::iterators::using_other_iterator_trait_methods();
+    functional::iterators::double_iteration();
 }

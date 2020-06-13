@@ -44,9 +44,8 @@ pub mod closures {
         generate_workout_without_closure(25, random_value);
     }
 
-    // closure本体と呼び出し結果を保存する構造体を作る
-    // closureはFnトレイト，FnMut，FnOnceトレイトのどれかを実装している
-    // 今回はFnを使ってみる
+    // 応用例：関数と，その結果のキャッシュを持つ構造体
+    // 重たい関数の場合役立つ
     // トレイト境界を見るとclosureだなと，rustマンにはわかる
     struct Cacher<T>
     where
@@ -152,9 +151,30 @@ pub mod closures {
         generate_workout_with_closure_improved(25, random_value, expensive_function);
     }
 
-    // 値を不変で借用する
-    // Fnトレイトの性質
-    pub fn fn_trait() {
+    // いろんな書き方
+    // 引き数 + 1 を計算するシンプルなものを使った例
+    pub fn several_ways_to_describe_closures() {
+        // 明示的に書く例
+        // わかりやすい
+        let c1 = |x: u32| -> u32 { x + 1 };
+
+        // rustfmtなどの整形ツールを使うと{}は自動で消えてしまう
+        // あえて{}を書いてあげるほど複雑ではないからかもしれない
+        // let c2 = |x| {x + 1};
+
+        // 最小限の例
+        // シンプルなものならこっちがよい
+        let c3 = |x| x + 1;
+
+        println!("c1(3) is: {}", c1(3)); // 4
+
+        // println!("c2(4) is: {}", c2(4)); // 5
+
+        println!("c3(5) is: {}", c3(5)); // 6
+    }
+
+    // 値を不変で借用する形でキャプチャする
+    pub fn capture_values_as_const_one() {
         // Copyトレイトあり
         let x = 3;
         let y = 3;
@@ -167,14 +187,14 @@ pub mod closures {
         let b = vec![1, 3, 2];
         // aを不変借用
         let equal_to_a = |c| c == a;
-        let result = equal_to_a(b);
-        println!("a is alive: {:?}", a);
+        let result = equal_to_a(b); // 借用しているだけなので所有権は移動していない
+        println!("a is alive: {:?}", a); // なので使用可能
 
         println!("result: {:?}", result); // false
     }
 
     // 値の所有権を奪うことを強制するmoveキーワード
-    pub fn fn_move() {
+    pub fn capture_values_in_whole() {
         // Copyトレイトあり
         let x = 2;
         let y = 3;
@@ -214,16 +234,36 @@ pub mod iterators {
         // 使われてなんぼ
         let v1_it = v1.iter();
 
-        // * 所有権移動します
-        // forでiterを使うときにmutにする必要がないのは...?
-        // rustのcoreな方でなんかしてくれているのだろう...きっと
+        // v1_itの所有権は移動され，Dropされます
         for val in v1_it {
             println!("simple_iteration: {}", val);
         }
 
-        // 使えません
-        // nextを使うときはv1_itはmutにしてね
-        // println!("{}", v1_it.next().unwrap());
+        // なので使えません
+        // println!("{}", v1_it.sum::<i32>());
+    }
+
+    // 2D配列のスキャンもc++, python間隔で可能
+    pub fn double_iteration() {
+        let mat_int = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+
+        for row in mat_int.iter() {
+            for col in row.iter() {
+                println!("the element is: {}", col); // 1, 2, 3, ..., 9
+            }
+        }
+
+        let mat_string = vec![
+            vec![String::from("a"), String::from("b"), String::from("c")],
+            vec![String::from("d"), String::from("e"), String::from("f")],
+            vec![String::from("g"), String::from("h"), String::from("i")],
+        ];
+
+        for row in mat_string.iter() {
+            for col in row.iter() {
+                println!("the element is: {}", col); // a, b, c, ..., i
+            }
+        }
     }
 
     // 手動で要素のスキャンをする
@@ -249,20 +289,26 @@ pub mod iterators {
         let v1_it = v1.iter();
 
         // sumメソッドでiterの所有権は奪われる
+        // fn sum<S>(self) -> S
         // v1_itはこの文でDropされる
         let sum: i32 = v1_it.sum();
+        println!("use_sum: sum is {}", sum); // 6
 
         // なので使えませんよ
         // nextを使うときはv1_itはmutにしてね
         // println!("{}", v1_it.next().unwrap());
 
-        println!("use_sum: sum is {}", sum);
+        // v1の所有権までは取らないよ
+        println!("v1: {:?}", v1);
     }
 
+    // Iteratorトレイトの便利関数の一部を紹介
+    // その他はここ-> https://doc.rust-lang.org/std/iter/trait.Iterator.html
     // 任意のクロージャでコレクションを変換できる便利なやつ
     pub fn map() {
         let v1 = vec![1, 2, 3];
         // mapはクロージャをとる
+        // collectでVecにする
         let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
 
         println!("mapped v1 is: {:?}", v2); // [2, 3, 4]
@@ -277,23 +323,26 @@ pub mod iterators {
         println!("filtered v1 is: {:?}", v2); // [2]
     }
 
+    // 1~5をカウントするだけのイテレータクラス
     struct Counter {
         count: u32,
     }
     impl Counter {
+        // かならず0から開始する
         fn new() -> Counter {
             Counter { count: 0 }
         }
     }
+    // 内部変数確認用
     impl std::fmt::Display for Counter {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             write!(f, "counter: {}", self.count)
         }
     }
     impl Iterator for Counter {
-        // other methods are default ones
-        type Item = u32;
+        type Item = u32; // 19章で...
 
+        // other methods are default ones.
         fn next(&mut self) -> Option<Self::Item> {
             self.count += 1;
 
@@ -306,6 +355,7 @@ pub mod iterators {
     }
 
     // nextを呼んでみる
+    // countメンバも更新されている(念の為みてみた)
     pub fn call_next_of_counter() {
         let mut counter = Counter::new();
 
@@ -327,6 +377,7 @@ pub mod iterators {
 
     // rustライクに，複雑な処理を順序よく，わかりやすめに書く
     // Iteratorトレイトを実装したため，実装していないその他のデフォルトメソッドが使用可能に
+    // その他のメソッドも，nextを使っているため
     // これは楽だ
     pub fn using_other_iterator_trait_methods() {
         let sum: u32 = Counter::new() // 1から開始（1, 2, 3, 4, 5, None, ...)

@@ -8,6 +8,7 @@ fn main() {
     functional::closures::several_ways_to_describe_closures();
     functional::closures::capture_values_as_const_one();
     functional::closures::capture_values_in_whole();
+    functional::closures::capture_values_in_whole_2();
 
     functional::iterators::simple_iteration();
     functional::iterators::next();

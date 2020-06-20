@@ -210,6 +210,7 @@ pub mod closures {
         let a = vec![1, 2, 3];
         let b = vec![1, 2, 3];
         // moveキーワードでaの所有権を奪う
+        // ==はeq(&self, other: &Self) -> bool
         let equal_to_a = move |c| c == a; // variable 'a' moved due to use in closure
 
         // aはもういない. 下のprintlnは怒られる
@@ -217,6 +218,28 @@ pub mod closures {
 
         let result = equal_to_a(b); // variable 'b' moved due to use in closure
         println!("result: {:?}", result); // true
+    }
+
+    // 所有権を奪った先で消化してみる
+    pub fn capture_values_in_whole_2() {
+        let a = vec![1, 2, 3];
+        let b = vec![1, 2, 3];
+        // moveキーワードでaの所有権を奪う
+        let equal_to_a =
+            // into_iter()でvecの所有権を奪い，sumで消化仕切る
+            move |c: Vec<i32>| c.into_iter().sum::<i32>() == a.into_iter().sum::<i32>(); // variable 'a' moved due to use in closure
+
+        // 1回目
+        let result = equal_to_a(b); // variable 'b' moved due to use in closure
+                                    // aは消費される(drop)
+        println!("result: {:?}", result); // true
+
+        // 2回目
+        // 怒られる
+        // let c = vec![3, 2, 1];
+        // let result = equal_to_a(c); // variable 'c' moved due to use in closure
+        //                             // aはもういない
+        // println!("result: {:?}", result); // true
     }
 }
 

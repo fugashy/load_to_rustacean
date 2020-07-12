@@ -12,5 +12,17 @@ fn main() {
     pattern_matching::let_statement_uses_pattern();
 
     pattern_matching::various_refutables();
+    pattern_matching::match_arm_begins_new_scope();
+    pattern_matching::multiple_match();
+    pattern_matching::range_match();
     pattern_matching::decomposition_and_matching_of_struct_may_be_tricky();
+    pattern_matching::destructure_enum();
+    pattern_matching::destructure_nested_structures();
+
+    pattern_matching::wild_card_in_the_nest();
+    pattern_matching::difference_between_unused_value_and_wild_card();
+    pattern_matching::ignore_a_range_of_structure();
+    pattern_matching::ignore_a_range_of_tuple_and_list();
+
+    pattern_matching::at_binding();
 }
